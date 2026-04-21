@@ -6,7 +6,7 @@ import toast from 'react-hot-toast'
 
 const AddCar = () => {
 
-  const {axios, currency} = useAppContext()
+  const {axios, currency, fetchCars} = useAppContext()
 
   const [image, setImage] = useState(null)
   const [car, setCar] = useState({
@@ -20,9 +20,27 @@ const AddCar = () => {
     seating_capacity: 0,
     location: '',
     description: '',
+    features: [''],
   })
 
   const [isLoading, setIsLoading] = useState(false)
+
+  const handleFeatureChange = (index, value) => {
+    const newFeatures = [...car.features];
+    newFeatures[index] = value;
+    setCar({ ...car, features: newFeatures });
+  };
+
+  const addFeature = () => {
+    setCar({ ...car, features: [...car.features, ''] });
+  };
+
+  const removeFeature = (index) => {
+    const newFeatures = [...car.features];
+    newFeatures.splice(index, 1);
+    setCar({ ...car, features: newFeatures });
+  };
+
   const onSubmitHandler = async (e)=>{
     e.preventDefault()
     if(isLoading) return null
@@ -37,6 +55,7 @@ const AddCar = () => {
 
       if(data.success){
         toast.success(data.message)
+        fetchCars()
         setImage(null)
         setCar({
           brand: '',
@@ -49,6 +68,7 @@ const AddCar = () => {
           seating_capacity: 0,
           location: '',
           description: '',
+          features: [''],
         })
       }else{
         toast.error(data.message)
@@ -155,6 +175,35 @@ const AddCar = () => {
          <div className='flex flex-col w-full'>
             <label>Description</label>
             <textarea rows={5} placeholder="e.g. A luxurious SUV with a spacious interior and a powerful engine." required className='px-3 py-2 mt-1 border border-borderColor rounded-md outline-none' value={car.description} onChange={e=> setCar({...car, description: e.target.value})}></textarea>
+          </div>
+
+        {/* Car Features */}
+         <div className='flex flex-col w-full'>
+            <label className='mb-1'>Features</label>
+            {car.features.map((feature, index) => (
+              <div key={index} className='flex items-center gap-2 mb-2'>
+                <input 
+                  type="text" 
+                  placeholder={`Feature ${index + 1} (e.g. Bluetooth)`} 
+                  className='px-3 py-2 border border-borderColor rounded-md outline-none flex-1' 
+                  value={feature} 
+                  onChange={e => handleFeatureChange(index, e.target.value)} 
+                />
+                {car.features.length > 1 && (
+                  <button type="button" onClick={() => removeFeature(index)} className='bg-red-100 text-red-500 p-2 rounded-md hover:bg-red-200 transition-colors'>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            ))}
+            <button type="button" onClick={addFeature} className='flex items-center gap-1 text-primary text-sm font-medium mt-1 w-max hover:underline'>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Add another feature
+            </button>
           </div>
 
         <button className='flex items-center gap-2 px-4 py-2.5 mt-4 bg-primary text-white rounded-md font-medium w-max cursor-pointer'>
