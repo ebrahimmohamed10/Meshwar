@@ -3,16 +3,18 @@ import { assets } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
 
-const CarCard = ({car}) => {
+const CarCard = ({ car }) => {
 
     const navigate = useNavigate()
+    const unavailable = !car.isAvaliable
 
     return (
         <motion.div
-            whileHover={{ y: -6 }}
+            whileHover={{ y: unavailable ? 0 : -6 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            onClick={() => { navigate(`/car-details/${car._id}`); scrollTo(0,0) }}
-            className='group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl hover:shadow-primary/10 transition-all duration-400 cursor-pointer border border-gray-100'
+            onClick={() => { navigate(`/car-details/${car._id}`); scrollTo(0, 0) }}
+            className={`group bg-white rounded-2xl overflow-hidden shadow-md transition-all duration-400 cursor-pointer border border-gray-100
+                ${unavailable ? 'opacity-75 grayscale-[35%] hover:shadow-md' : 'hover:shadow-2xl hover:shadow-primary/10'}`}
         >
             {/* Image */}
             <div className='relative h-52 overflow-hidden bg-gray-50'>
@@ -26,7 +28,14 @@ const CarCard = ({car}) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
 
                 {/* Availability badge */}
-                {car.isAvaliable && (
+                {unavailable ? (
+                    <span className='absolute top-3 left-3 flex items-center gap-1 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg'>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        Unavailable
+                    </span>
+                ) : (
                     <span className='absolute top-3 left-3 bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg'>
                         ✓ Available
                     </span>
@@ -61,26 +70,30 @@ const CarCard = ({car}) => {
                 {/* Specs grid */}
                 <div className='grid grid-cols-2 gap-2.5'>
                     <div className='flex items-center gap-2 text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2'>
-                        <img src={assets.users_icon} alt="" className='h-3.5 opacity-60'/>
+                        <img src={assets.users_icon} alt="" className='h-3.5 opacity-60' />
                         <span className="font-medium">{car.seating_capacity} Seats</span>
                     </div>
                     <div className='flex items-center gap-2 text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2'>
-                        <img src={assets.fuel_icon} alt="" className='h-3.5 opacity-60'/>
+                        <img src={assets.fuel_icon} alt="" className='h-3.5 opacity-60' />
                         <span className="font-medium">{car.fuel_type}</span>
                     </div>
                     <div className='flex items-center gap-2 text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2'>
-                        <img src={assets.car_icon} alt="" className='h-3.5 opacity-60'/>
+                        <img src={assets.car_icon} alt="" className='h-3.5 opacity-60' />
                         <span className="font-medium">{car.transmission}</span>
                     </div>
                     <div className='flex items-center gap-2 text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2'>
-                        <img src={assets.location_icon} alt="" className='h-3.5 opacity-60'/>
+                        <img src={assets.location_icon} alt="" className='h-3.5 opacity-60' />
                         <span className="font-medium truncate">{car.location}</span>
                     </div>
                 </div>
 
                 {/* CTA */}
-                <div className="mt-4 w-full py-2.5 text-center text-sm font-semibold text-primary border border-primary/30 rounded-xl group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all duration-300">
-                    View Details →
+                <div className={`mt-4 w-full py-2.5 text-center text-sm font-semibold rounded-xl transition-all duration-300
+                    ${unavailable
+                        ? 'bg-red-50 text-red-400 border border-red-200'
+                        : 'text-primary border border-primary/30 group-hover:bg-primary group-hover:text-white group-hover:border-primary'
+                    }`}>
+                    {unavailable ? '⊘ Not Available for Booking' : 'View Details →'}
                 </div>
             </div>
         </motion.div>

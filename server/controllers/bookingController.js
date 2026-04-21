@@ -115,3 +115,34 @@ export const changeBookingStatus = async (req, res)=>{
         res.json({success: false, message: error.message})
     }
 }
+
+// API to Cancel a Booking (user only, and only if status is 'pending')
+export const cancelBooking = async (req, res) => {
+    try {
+        const { _id } = req.user;
+        const { bookingId } = req.params;
+
+        const booking = await Booking.findById(bookingId);
+
+        if (!booking) {
+            return res.json({ success: false, message: "Booking not found" });
+        }
+
+        // Only the user who made the booking can cancel it
+        if (booking.user.toString() !== _id.toString()) {
+            return res.json({ success: false, message: "Unauthorized" });
+        }
+
+        // Only allow cancellation when status is pending
+        if (booking.status !== "pending") {
+            return res.json({ success: false, message: "Only pending bookings can be cancelled" });
+        }
+
+        await Booking.findByIdAndDelete(bookingId);
+
+        res.json({ success: true, message: "Booking cancelled successfully" });
+    } catch (error) {
+        console.log(error.message);
+        res.json({ success: false, message: error.message });
+    }
+}
