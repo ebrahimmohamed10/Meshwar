@@ -135,8 +135,6 @@ const CarDetails = () => {
 
             <button className='w-full bg-primary hover:bg-primary-dull transition-all py-3 font-medium text-white rounded-xl cursor-pointer'>Book Now</button>
 
-            <p className='text-center text-sm'>No credit card required to reserve</p>
-
           </motion.form>
        </div>
 
