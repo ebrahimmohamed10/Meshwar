@@ -33,6 +33,7 @@ import location_icon_colored from "./location_icon_colored.svg"
 import testimonial_image_1 from "./WhatsApp Image 2025-11-02 at 00.23.55_93d61843.jpg"
 import testimonial_image_2 from "./WhatsApp Image 2026-04-18 at 10.08.41 PM.jpeg"
 import testimonial_image_3 from "./WhatsApp Image 2026-04-18 at 10.12.27 PM.jpg"
+import mahmoud_image from "./mahmoud.jpg"
 import main_car from "./main_car.png"
 import banner_car_image from "./banner_car_image.png"
 import user_profile from "./user_profile.png"
@@ -80,6 +81,7 @@ export const assets = {
     testimonial_image_1,
     testimonial_image_2,
     testimonial_image_3,
+    mahmoud_image,
     main_car,
     banner_car_image,
     car_image1,
