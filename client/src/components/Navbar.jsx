@@ -97,7 +97,7 @@ const Navbar = () => {
                     onClick={() => isOwner ? navigate('/owner') : changeRole()}
                     className="text-sm font-medium text-gray-600 hover:text-primary transition-colors cursor-pointer"
                 >
-                    {isOwner ? 'Dashboard' : 'List cars'}
+                    {isOwner ? 'Owner Dashboard' : 'List cars'}
                 </button>
 
                 <motion.button
@@ -140,7 +140,7 @@ const Navbar = () => {
                         <div className="flex items-center gap-3 pt-2">
                             <button onClick={() => { isOwner ? navigate('/owner') : changeRole(); setOpen(false) }}
                                 className="flex-1 text-center py-2.5 rounded-full border border-borderColor text-sm font-medium text-gray-600 hover:border-primary hover:text-primary transition-all cursor-pointer">
-                                {isOwner ? 'Dashboard' : 'List cars'}
+                                {isOwner ? 'Owner Dashboard' : 'List cars'}
                             </button>
                             <button onClick={() => { user ? logout() : setShowLogin(true); setOpen(false) }}
                                 className="flex-1 btn-primary text-sm font-semibold py-2.5 rounded-full cursor-pointer">

@@ -72,7 +72,7 @@ const Dashboard = () => {
     <div className='px-4 pt-10 md:px-10 flex-1 min-h-screen bg-[#F9FAFB] pb-12'>
       
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Admin Dashboard</h1>
+        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Owner Dashboard</h1>
         <p className="text-sm text-gray-500 mt-1">Monitor overall platform performance, bookings, and revenue.</p>
       </div>
 
