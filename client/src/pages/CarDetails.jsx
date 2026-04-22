@@ -18,6 +18,10 @@ const CarDetails = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!car.isAvaliable) {
+      toast.error('This car is currently unavailable for booking.')
+      return;
+    }
     if (!pickupDate || !returnDate) {
       toast.error('Please select both pickup and return dates.')
       return;
@@ -144,7 +148,12 @@ const CarDetails = () => {
               type="date" className='border border-borderColor px-3 py-2 rounded-lg' required id='return-date' />
           </div>
 
-          <button className='w-full bg-primary hover:bg-primary-dull transition-all py-3 font-medium text-white rounded-xl cursor-pointer'>Book Now</button>
+          <button
+            disabled={!car.isAvaliable}
+            className={`w-full transition-all py-3 font-medium text-white rounded-xl ${!car.isAvaliable ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary hover:bg-primary-dull cursor-pointer'}`}
+          >
+            {!car.isAvaliable ? 'Not Available for Booking' : 'Book Now'}
+          </button>
 
         </motion.form>
       </div>
