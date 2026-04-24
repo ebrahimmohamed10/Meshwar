@@ -71,16 +71,6 @@ const Navbar = () => {
                             <span className={`absolute -bottom-0.5 left-0 h-0.5 bg-primary rounded-full transition-all duration-300 ${location.pathname === link.path ? 'w-full' : 'w-0 group-hover:w-full'
                                 }`} />
                         </Link>
-                        {link.name === "My Bookings" && user && (
-                            <motion.div
-                                initial={{ scale: 0.8, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                className="flex items-center gap-1.5 bg-primary/5 border border-primary/10 px-2.5 py-1 rounded-lg text-primary"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-wallet"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /></svg>
-                                <span className="text-xs font-bold">{(user.wallet || 0).toLocaleString()} {currency}</span>
-                            </motion.div>
-                        )}
                     </div>
                 ))}
             </div>
@@ -136,15 +126,9 @@ const Navbar = () => {
                         {menuLinks.map((link, i) => (
                             <div key={i} className="flex items-center justify-between py-1">
                                 <Link to={link.path} onClick={() => setOpen(false)}
-                                    className="text-gray-700 font-medium hover:text-primary transition-colors">
+                                     className="text-gray-700 font-medium hover:text-primary transition-colors">
                                     {link.name}
                                 </Link>
-                                {link.name === "My Bookings" && user && (
-                                    <div className="flex items-center gap-1.5 bg-primary/10 px-3 py-1 rounded-full text-primary">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /></svg>
-                                        <span className="text-xs font-bold">{(user.wallet || 0).toLocaleString()} {currency}</span>
-                                    </div>
-                                )}
                             </div>
                         ))}
                         <div className="flex items-center gap-2 bg-gray-100 px-4 py-2.5 rounded-full">

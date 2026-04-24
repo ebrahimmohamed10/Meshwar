@@ -6,6 +6,8 @@ import CarDetails from './pages/CarDetails'
 import Checkout from './pages/Checkout'
 import Cars from './pages/Cars'
 import MyBookings from './pages/MyBookings'
+import MyAccount from './pages/MyAccount'
+import Wallet from './pages/Wallet'
 import Footer from './components/Footer'
 import Layout from './pages/owner/Layout'
 import Dashboard from './pages/owner/Dashboard'
@@ -38,6 +40,8 @@ const App = () => {
       <Route path='/checkout/:id' element={<Checkout/>}/>
       <Route path='/cars' element={<Cars/>}/>
       <Route path='/my-bookings' element={<MyBookings/>}/>
+      <Route path='/wallet' element={<Wallet/>}/>
+      <Route path='/my-account' element={<MyAccount/>}/>
       <Route path='/owner' element={<Layout />}>
         <Route index element={<Dashboard />}/>
         <Route path="add-car" element={<AddCar />}/>

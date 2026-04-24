@@ -55,8 +55,17 @@ export const createBooking = async (req, res) => {
         // Calculate price based on pickupDate and returnDate
         const picked = new Date(pickupDate);
         const returned = new Date(returnDate);
-        const noOfDays = Math.ceil((returned - picked) / (1000 * 60 * 60 * 24))
+        const noOfDays = Math.ceil((returned - picked) / (1000 * 60 * 60 * 24)) || 1
         const price = carData.pricePerDay * noOfDays;
+
+        // Handle Wallet Payment
+        if (paymentMethod === 'Wallet') {
+            const user = await User.findById(_id)
+            if (user.wallet < price) {
+                return res.json({ success: false, message: "Insufficient wallet balance" })
+            }
+            await User.findByIdAndUpdate(_id, { $inc: { wallet: -price } })
+        }
 
         await Booking.create({ car, owner: carData.owner, user: _id, pickupDate, returnDate, price, paymentMethod: paymentMethod || 'offline' })
 
