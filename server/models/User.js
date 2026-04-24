@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
     country: { type: String, default: 'Not Selected' },
     idCardFront: { type: String, default: '' },
     idCardBack: { type: String, default: '' },
+    isPremium: { type: Boolean, default: false },
     wallet: { type: Number, default: 0 },
 }, { timestamps: true })
 

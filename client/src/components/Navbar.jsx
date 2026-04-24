@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'motion/react'
 
 const Navbar = () => {
 
-    const { setShowLogin, user, logout, isOwner, axios, setIsOwner, currency } = useAppContext()
+    const { setShowLogin, user, logout, isOwner, axios, setIsOwner, currency, isPremium } = useAppContext()
     const location = useLocation()
     const [open, setOpen] = useState(false)
     const navigate = useNavigate()
@@ -92,10 +92,10 @@ const Navbar = () => {
                 </div>
 
                 <button
-                    onClick={() => isOwner ? navigate('/owner') : changeRole()}
+                    onClick={() => isPremium ? navigate('/owner') : navigate('/checkout/premium')}
                     className="text-sm font-medium text-gray-600 hover:text-primary transition-colors cursor-pointer"
                 >
-                    {isOwner ? 'Owner Dashboard' : 'List cars'}
+                    {isPremium ? 'Owner Dashboard' : 'List cars'}
                 </button>
 
                 <motion.button
@@ -138,9 +138,9 @@ const Navbar = () => {
                                 placeholder="Search cars…" />
                         </div>
                         <div className="flex items-center gap-3 pt-2">
-                            <button onClick={() => { isOwner ? navigate('/owner') : changeRole(); setOpen(false) }}
+                            <button onClick={() => { isPremium ? navigate('/owner') : navigate('/checkout/premium'); setOpen(false) }}
                                 className="flex-1 text-center py-2.5 rounded-full border border-borderColor text-sm font-medium text-gray-600 hover:border-primary hover:text-primary transition-all cursor-pointer">
-                                {isOwner ? 'Owner Dashboard' : 'List cars'}
+                                {isPremium ? 'Owner Dashboard' : 'List cars'}
                             </button>
                             <button onClick={() => { user ? logout() : setShowLogin(true); setOpen(false) }}
                                 className="flex-1 btn-primary text-sm font-semibold py-2.5 rounded-full cursor-pointer">

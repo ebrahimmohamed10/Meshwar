@@ -130,3 +130,16 @@ export const updateUserProfile = async (req, res) => {
         res.json({ success: false, message: error.message })
     }
 }
+
+// Upgrade User to Premium
+export const upgradeToPremium = async (req, res) => {
+    try {
+        const { _id } = req.user
+        // In a real app, you'd verify payment here
+        await User.findByIdAndUpdate(_id, { isPremium: true, role: 'owner' })
+        res.json({ success: true, message: "Welcome to Premium!" })
+    } catch (error) {
+        console.log(error.message);
+        res.json({ success: false, message: error.message })
+    }
+}
