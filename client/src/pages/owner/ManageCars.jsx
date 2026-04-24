@@ -45,7 +45,7 @@ const ManageCars = () => {
 
   const deleteCar = async (carId)=>{
     try {
-      const confirm = window.confirm('Are you sure you want to permanently delete this car from your fleet?')
+      const confirm = window.confirm('Are you sure you want to permanently delete this car from your collection?')
       if(!confirm) return null
 
       const {data} = await axios.post('/api/owner/delete-car', {carId})
@@ -113,7 +113,7 @@ const ManageCars = () => {
       
       <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Manage Fleet</h1>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Manage Cars</h1>
           <p className="text-sm text-gray-500 mt-1">View, update details, or toggle availability of your listed cars.</p>
         </div>
         <div className="flex items-center gap-3">
@@ -128,7 +128,7 @@ const ManageCars = () => {
         <div className="flex flex-col items-center justify-center h-64 bg-white rounded-xl border border-gray-200 shadow-sm">
            <svg className="w-12 h-12 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
            <h3 className="text-sm font-medium text-gray-900">No cars found</h3>
-           <p className="text-sm text-gray-500 mt-1">You haven't added any cars to your fleet yet.</p>
+           <p className="text-sm text-gray-500 mt-1">You haven't added any cars to your collection yet.</p>
         </div>
       ) : (
         <motion.div 
@@ -173,7 +173,7 @@ const ManageCars = () => {
                     {/* Price */}
                     <td className="py-4 px-6 whitespace-nowrap text-right">
                       <div className="text-sm font-semibold text-gray-900">
-                        {car.pricePerDay.toLocaleString()} <span className="text-xs text-gray-500 font-normal">EGP/day</span>
+                        {car.pricePerDay.toLocaleString()} <span className="text-xs text-gray-500 font-normal">{currency}/day</span>
                       </div>
                     </td>
 
@@ -284,7 +284,7 @@ const ManageCars = () => {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Daily Rate (EGP)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Daily Rate ({currency})</label>
                     <input type="number" required className='w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-gray-900' value={editForm.pricePerDay} onChange={e=> setEditForm({...editForm, pricePerDay: e.target.value})}/>
                   </div>
 

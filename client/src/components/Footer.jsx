@@ -32,7 +32,7 @@ const Footer = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className='relative text-gray-300 overflow-hidden' style={{backgroundColor: '#1a4a32'}}
+            className='relative text-gray-300 overflow-hidden' style={{ backgroundColor: '#1a4a32' }}
         >
             {/* Top accent */}
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent" />

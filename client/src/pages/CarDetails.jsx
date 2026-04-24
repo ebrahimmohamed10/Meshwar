@@ -131,7 +131,7 @@ const CarDetails = () => {
           onSubmit={handleSubmit} className='shadow-lg h-max sticky top-18 rounded-xl p-6 space-y-6 text-gray-500'>
 
           <p className='flex items-center justify-between text-2xl text-gray-800 font-semibold'>
-            {car.pricePerDay} EGP
+            {car.pricePerDay.toLocaleString()} {currency}
             <span className='text-base text-gray-400 font-normal'>per day</span>
           </p>
           <hr className='border-borderColor my-6' />

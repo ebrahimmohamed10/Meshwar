@@ -8,7 +8,7 @@ import Loader from '../components/Loader'
 
 const Checkout = () => {
   const { id } = useParams()
-  const { cars, axios, pickupDate, returnDate } = useAppContext()
+  const { cars, axios, pickupDate, returnDate, currency } = useAppContext()
   const navigate = useNavigate()
 
   const [car, setCar] = useState(null)
@@ -263,7 +263,7 @@ const Checkout = () => {
                           Payment Successful
                        </span>
                     ) : (
-                       `Pay ${grandTotal.toLocaleString()} EGP`
+                       `Pay ${grandTotal.toLocaleString()} ${currency}`
                     )}
                  </button>
                </div>
@@ -303,7 +303,7 @@ const Checkout = () => {
                    </div>
                    <div className='flex justify-between text-gray-600'>
                       <span>Daily Rate</span>
-                      <span className='text-gray-800 font-medium'>{car.pricePerDay} EGP</span>
+                      <span className='text-gray-800 font-medium'>{(car.pricePerDay || 0).toLocaleString()} {currency}</span>
                    </div>
                 </div>
 
@@ -312,11 +312,11 @@ const Checkout = () => {
                 <div className='space-y-3 mb-6'>
                    <div className='flex justify-between text-gray-600'>
                       <span>Subtotal</span>
-                      <span className='text-gray-800 font-medium'>{total.toLocaleString()} EGP</span>
+                      <span className='text-gray-800 font-medium'>{total.toLocaleString()} {currency}</span>
                    </div>
                    <div className='flex justify-between text-gray-600'>
                       <span>Taxes & Fees</span>
-                      <span className='text-gray-800 font-medium'>{taxes.toLocaleString()} EGP</span>
+                      <span className='text-gray-800 font-medium'>{taxes.toLocaleString()} {currency}</span>
                    </div>
                 </div>
 
@@ -324,7 +324,7 @@ const Checkout = () => {
 
                 <div className='flex justify-between items-center mt-2'>
                    <span className='text-lg font-semibold text-gray-800'>Total Due</span>
-                   <span className='text-2xl font-bold text-gray-900'>{grandTotal.toLocaleString()} <span className='text-sm font-normal text-gray-500'>EGP</span></span>
+                   <span className='text-2xl font-bold text-gray-900'>{grandTotal.toLocaleString()} <span className='text-sm font-normal text-gray-500'>{currency}</span></span>
                 </div>
              </div>
           </motion.div>

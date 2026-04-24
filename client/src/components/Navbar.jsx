@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { assets, menuLinks } from '../assets/assets'
-import {Link, useLocation, useNavigate} from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAppContext } from '../context/AppContext'
 import toast from 'react-hot-toast'
-import {motion, AnimatePresence} from 'motion/react'
+import { motion, AnimatePresence } from 'motion/react'
 
 const Navbar = () => {
 
-    const {setShowLogin, user, logout, isOwner, axios, setIsOwner} = useAppContext()
+    const { setShowLogin, user, logout, isOwner, axios, setIsOwner, currency } = useAppContext()
     const location = useLocation()
     const [open, setOpen] = useState(false)
     const navigate = useNavigate()
@@ -39,13 +39,12 @@ const Navbar = () => {
             initial={{ y: -80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-3 transition-all duration-400 ${
-                scrolled
-                    ? 'bg-white/90 backdrop-blur-xl shadow-lg shadow-black/5 border-b border-gray-100'
-                    : isHome
-                        ? 'bg-transparent'
-                        : 'bg-white/80 backdrop-blur-md border-b border-borderColor'
-            }`}
+            className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-16 lg:px-24 xl:px-32 py-3 transition-all duration-400 ${scrolled
+                ? 'bg-white/90 backdrop-blur-xl shadow-lg shadow-black/5 border-b border-gray-100'
+                : isHome
+                    ? 'bg-transparent'
+                    : 'bg-white/80 backdrop-blur-md border-b border-borderColor'
+                }`}
         >
             {/* Logo */}
             <Link to='/' onClick={() => setOpen(false)}>
@@ -60,20 +59,29 @@ const Navbar = () => {
             {/* Desktop nav links */}
             <div className="hidden sm:flex items-center gap-8">
                 {menuLinks.map((link, index) => (
-                    <Link
-                        key={index}
-                        to={link.path}
-                        className={`text-sm font-medium relative group transition-colors duration-200 ${
-                            location.pathname === link.path
+                    <div key={index} className="flex items-center gap-2">
+                        <Link
+                            to={link.path}
+                            className={`text-sm font-medium relative group transition-colors duration-200 ${location.pathname === link.path
                                 ? 'text-primary'
                                 : 'text-gray-600 hover:text-primary'
-                        }`}
-                    >
-                        {link.name}
-                        <span className={`absolute -bottom-0.5 left-0 h-0.5 bg-primary rounded-full transition-all duration-300 ${
-                            location.pathname === link.path ? 'w-full' : 'w-0 group-hover:w-full'
-                        }`} />
-                    </Link>
+                                }`}
+                        >
+                            {link.name}
+                            <span className={`absolute -bottom-0.5 left-0 h-0.5 bg-primary rounded-full transition-all duration-300 ${location.pathname === link.path ? 'w-full' : 'w-0 group-hover:w-full'
+                                }`} />
+                        </Link>
+                        {link.name === "My Bookings" && user && (
+                            <motion.div
+                                initial={{ scale: 0.8, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                className="flex items-center gap-1.5 bg-primary/5 border border-primary/10 px-2.5 py-1 rounded-lg text-primary"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-wallet"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /></svg>
+                                <span className="text-xs font-bold">{(user.wallet || 0).toLocaleString()} {currency}</span>
+                            </motion.div>
+                        )}
+                    </div>
                 ))}
             </div>
 
@@ -82,7 +90,7 @@ const Navbar = () => {
                 {/* Search bar */}
                 <div className="flex items-center gap-2 text-sm bg-gray-100 hover:bg-gray-200 transition-colors px-4 py-2 rounded-full w-48">
                     <img src={assets.search_icon} alt="search" className="w-4 h-4 opacity-50 cursor-pointer"
-                         onClick={() => searchTerm.trim() && navigate(`/cars?search=${searchTerm}`)} />
+                        onClick={() => searchTerm.trim() && navigate(`/cars?search=${searchTerm}`)} />
                     <input
                         type="text"
                         value={searchTerm}
@@ -126,10 +134,18 @@ const Navbar = () => {
                         className="absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-xl sm:hidden px-6 py-6 flex flex-col gap-4"
                     >
                         {menuLinks.map((link, i) => (
-                            <Link key={i} to={link.path} onClick={() => setOpen(false)}
-                                className="text-gray-700 font-medium hover:text-primary transition-colors py-1">
-                                {link.name}
-                            </Link>
+                            <div key={i} className="flex items-center justify-between py-1">
+                                <Link to={link.path} onClick={() => setOpen(false)}
+                                    className="text-gray-700 font-medium hover:text-primary transition-colors">
+                                    {link.name}
+                                </Link>
+                                {link.name === "My Bookings" && user && (
+                                    <div className="flex items-center gap-1.5 bg-primary/10 px-3 py-1 rounded-full text-primary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" /><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" /></svg>
+                                        <span className="text-xs font-bold">{(user.wallet || 0).toLocaleString()} {currency}</span>
+                                    </div>
+                                )}
+                            </div>
                         ))}
                         <div className="flex items-center gap-2 bg-gray-100 px-4 py-2.5 rounded-full">
                             <img src={assets.search_icon} alt="" className="w-4 h-4 opacity-50" />

@@ -144,7 +144,7 @@ const Dashboard = () => {
                         </div>
                       </td>
                       <td className="py-4 px-6 whitespace-nowrap text-right">
-                        <span className='text-sm font-bold text-gray-900'>{booking.price.toLocaleString()} <span className="text-xs text-gray-500 font-normal">EGP</span></span>
+                        <span className='text-sm font-bold text-gray-900'>{booking.price.toLocaleString()} <span className="text-xs text-gray-500 font-normal">{currency}</span></span>
                       </td>
                       <td className="py-4 px-6 whitespace-nowrap text-right">
                         <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-md text-xs font-bold tracking-wide uppercase
@@ -186,7 +186,7 @@ const Dashboard = () => {
             <h3 className='text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight text-center'>
               {data.monthlyRevenue.toLocaleString()}
             </h3>
-            <span className='text-lg font-medium text-gray-500 mt-2'>EGP</span>
+            <span className='text-lg font-medium text-gray-500 mt-2'>{currency}</span>
           </div>
         </motion.div>
         

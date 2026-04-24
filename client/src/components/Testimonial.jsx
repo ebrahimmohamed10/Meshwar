@@ -24,7 +24,7 @@ const Testimonial = () => {
             name: "Karim Elmetwally",
             location: "Mansoura, Egypt",
             image: assets.testimonial_image_3,
-            testimonial: "I highly recommend Meshwar! Their fleet is amazing, and I always feel like I'm getting the best deal with excellent service.",
+            testimonial: "I highly recommend Meshwar! Their car selection is amazing, and I always feel like I'm getting the best deal with excellent service.",
             rating: 5
         },
         {

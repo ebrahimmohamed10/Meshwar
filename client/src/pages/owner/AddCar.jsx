@@ -85,7 +85,7 @@ const AddCar = () => {
 
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Add New Car</h1>
-        <p className="text-sm text-gray-500 mt-1">List a new car in your fleet by providing the details below.</p>
+        <p className="text-sm text-gray-500 mt-1">List a new car in your collection by providing the details below.</p>
       </div>
 
       <motion.form 

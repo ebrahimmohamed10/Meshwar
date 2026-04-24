@@ -42,7 +42,7 @@ const ManageBookings = () => {
       <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Manage Bookings</h1>
-          <p className="text-sm text-gray-500 mt-1">Review and manage your fleet reservations and customer payments.</p>
+          <p className="text-sm text-gray-500 mt-1">Review and manage your car reservations and customer payments.</p>
         </div>
         <div className="flex items-center gap-3">
             <div className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm text-sm font-medium text-gray-700">
@@ -120,7 +120,7 @@ const ManageBookings = () => {
                     {/* Amount */}
                     <td className="py-4 px-6 whitespace-nowrap text-right">
                       <div className="text-sm font-semibold text-gray-900">
-                        {booking.price.toLocaleString()} <span className="text-xs text-gray-500 font-normal">EGP</span>
+                        {booking.price.toLocaleString()} <span className="text-xs text-gray-500 font-normal">{currency}</span>
                       </div>
                     </td>
 
@@ -146,7 +146,7 @@ const ManageBookings = () => {
                             className="appearance-none bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20 font-medium text-xs rounded-md pl-3 pr-7 py-1.5 outline-none cursor-pointer hover:bg-amber-100 transition-colors focus:ring-2 focus:ring-amber-500"
                           >
                             <option value="pending">Pending</option>
-                            <option value="cancelled">Cancel</option>
+                            <option value="rejected">Reject</option>
                             <option value="confirmed">Confirm</option>
                           </select>
                           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-amber-700">

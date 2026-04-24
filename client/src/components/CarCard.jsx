@@ -2,9 +2,11 @@ import React from 'react'
 import { assets } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
+import { useAppContext } from '../context/AppContext'
 
 const CarCard = ({ car }) => {
 
+    const { currency } = useAppContext()
     const navigate = useNavigate()
     const unavailable = !car.isAvaliable
 
@@ -48,7 +50,7 @@ const CarCard = ({ car }) => {
 
                 {/* Price */}
                 <div className='absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-xl shadow-lg'>
-                    <span className='font-bold text-gray-900 text-sm'>{car.pricePerDay.toLocaleString()} EGP</span>
+                    <span className='font-bold text-gray-900 text-sm'>{car.pricePerDay.toLocaleString()} {currency}</span>
                     <span className='text-gray-400 text-xs'> /day</span>
                 </div>
             </div>
