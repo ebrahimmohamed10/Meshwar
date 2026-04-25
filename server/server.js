@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import "dotenv/config";
 import cors from "cors";
 import connectDB from "./configs/db.js";
@@ -29,6 +30,17 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
+
+// Middleware to check Database Connection Status
+app.use((req, res, next) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).json({ 
+            success: false, 
+            message: "Database is not connected. Please check your MongoDB Atlas IP Whitelist and your internet connection." 
+        });
+    }
+    next();
+});
 
 app.get('/', (req, res)=> res.send("Server is running"))
 app.use('/api/user', userRouter)

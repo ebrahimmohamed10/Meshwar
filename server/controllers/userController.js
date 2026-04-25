@@ -134,10 +134,26 @@ export const updateUserProfile = async (req, res) => {
 // Upgrade User to Premium
 export const upgradeToPremium = async (req, res) => {
     try {
-        const { _id } = req.user
-        // In a real app, you'd verify payment here
-        await User.findByIdAndUpdate(_id, { isPremium: true, role: 'owner' })
-        res.json({ success: true, message: "Welcome to Premium!" })
+        const { _id } = req.user;
+        const { paymentMethod, billingCycle, plan } = req.body;
+
+        const plans = {
+            standard: { monthly: 99, annual: 990 },
+            professional: { monthly: 199, annual: 1990 }
+        };
+
+        if (paymentMethod === 'Wallet') {
+            const user = await User.findById(_id);
+            const price = plans[plan || 'standard'][billingCycle || 'monthly'];
+
+            if (user.wallet < price) {
+                return res.json({ success: false, message: "Insufficient wallet balance" });
+            }
+            await User.findByIdAndUpdate(_id, { $inc: { wallet: -price } });
+        }
+
+        await User.findByIdAndUpdate(_id, { isPremium: true, role: 'owner' });
+        res.json({ success: true, message: "Welcome to Premium! Your dashboard is now ready." });
     } catch (error) {
         console.log(error.message);
         res.json({ success: false, message: error.message })

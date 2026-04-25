@@ -147,11 +147,12 @@ const Checkout = () => {
                     <h2 className='text-lg font-black uppercase tracking-widest text-gray-800'>Payment Method</h2>
                 </div>
 
-                <div className='grid grid-cols-2 md:grid-cols-4 gap-3'>
+                <div className='grid grid-cols-2 md:grid-cols-5 gap-3'>
                     <MethodTab icon="card" label="Card" active={paymentMethod === 'Credit Card'} onClick={() => setPaymentMethod('Credit Card')} />
                     <MethodTab icon="apple" label="Apple" active={paymentMethod === 'Apple Pay'} onClick={() => setPaymentMethod('Apple Pay')} />
                     <MethodTab icon="instapay" label="InstaPay" active={paymentMethod === 'InstaPay'} onClick={() => setPaymentMethod('InstaPay')} />
                     <MethodTab icon="vodafone" label="Vodafone" active={paymentMethod === 'Vodafone Cash'} onClick={() => setPaymentMethod('Vodafone Cash')} />
+                    <MethodTab icon="wallet" label="Wallet" active={paymentMethod === 'Wallet'} onClick={() => setPaymentMethod('Wallet')} />
                 </div>
 
                 <AnimatePresence mode='wait'>
@@ -187,11 +188,37 @@ const Checkout = () => {
                     )}
 
                     {paymentMethod === 'Apple Pay' && (
-                        <motion.div key="apple" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className='bg-black rounded-[2.5rem] p-12 text-center space-y-8 cursor-pointer hover:scale-[0.98] transition-all' onClick={() => handlePayment(null, 'Apple Pay')}>
-                            <div className='flex items-center justify-center gap-3 text-white'>
-                                <svg className="w-10 h-10" viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
-                                <span className='text-3xl font-black tracking-tight'>Pay</span>
+                        <motion.div key="apple" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className='bg-black rounded-[1.5rem] p-6 text-center cursor-pointer hover:scale-[0.98] transition-all shadow-xl shadow-black/10' onClick={() => handlePayment(null, 'Apple Pay')}>
+                            <div className='flex items-center justify-center gap-2 text-white'>
+                                <svg className="w-7 h-7" viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                                <span className='text-xl font-bold tracking-tight'>Pay</span>
                             </div>
+                        </motion.div>
+                    )}
+
+                    {paymentMethod === 'Wallet' && (
+                        <motion.div key="wallet" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className='bg-white border border-gray-100 rounded-[2.5rem] p-10 shadow-sm text-center space-y-8'>
+                            <div className='space-y-2'>
+                                <div className='w-20 h-20 mx-auto bg-primary/10 rounded-full flex items-center justify-center text-primary'>
+                                    <svg width="40" height="40" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M20 12V8H6a2 2 0 01-2-2c0-1.1.9-2 2-2h12v.5M4 6v12c0 1.1.9 2 2 2h14v-4M16 16h4M20 12v4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                                </div>
+                                <h3 className='text-xl font-black text-gray-900'>Pay with Wallet</h3>
+                                <p className='text-xs font-medium text-gray-400'>Quick & Secure internal payment</p>
+                            </div>
+                            
+                            <div className='bg-gray-50 rounded-2xl p-6 border border-gray-100'>
+                                <span className='text-[10px] font-black uppercase tracking-widest text-gray-400'>Available Balance</span>
+                                <div className='text-3xl font-black text-primary mt-1'>{(user?.wallet || 0).toLocaleString()} <span className='text-xs text-gray-400'>{currency}</span></div>
+                            </div>
+
+                            {user?.wallet < grandTotal ? (
+                                <div className='p-4 bg-red-50 rounded-xl border border-red-100 flex items-center gap-3 text-left'>
+                                    <svg className='w-5 h-5 text-red-500 shrink-0' fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                                    <p className='text-[10px] font-black uppercase tracking-tight text-red-600'>Insufficient Balance. Please top up your wallet to use this method.</p>
+                                </div>
+                            ) : (
+                                <SubmitBtn onClick={() => handlePayment(null, 'Wallet')} loading={loading} success={success} total={grandTotal} currency={currency} />
+                            )}
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -264,12 +291,13 @@ const PricingCard = ({ plan, active, onClick, currency }) => (
 )
 
 const MethodTab = ({ icon, label, active, onClick }) => (
-    <button onClick={onClick} className={`flex flex-col items-center justify-center gap-3 p-5 rounded-2xl border-2 transition-all duration-300 ${active ? 'bg-white border-primary shadow-lg shadow-primary/10 scale-105' : 'bg-white border-gray-50 text-gray-300 hover:text-primary'}`}>
+    <button onClick={onClick} className={`flex flex-col items-center justify-center gap-3 p-5 rounded-2xl border-2 transition-all duration-300 ${active ? 'bg-white border-primary shadow-lg shadow-primary/10 scale-105' : 'bg-white border-gray-50 text-gray-300 hover:text-primary hover:border-primary/20'}`}>
         <div className='h-6 flex items-center justify-center'>
             {icon === 'card' && <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>}
             {icon === 'apple' && <svg width="22" height="22" fill="currentColor" viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>}
             {icon === 'instapay' && <div className='text-[10px] font-black'>IP</div>}
             {icon === 'vodafone' && <div className='text-[10px] font-black'>VF</div>}
+            {icon === 'wallet' && <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M20 12V8H6a2 2 0 01-2-2c0-1.1.9-2 2-2h12v.5M4 6v12c0 1.1.9 2 2 2h14v-4M16 16h4M20 12v4" strokeLinecap="round" strokeLinejoin="round"/></svg>}
         </div>
         <span className={`text-[8px] font-black uppercase tracking-widest ${active ? 'text-primary' : 'text-gray-300'}`}>{label}</span>
     </button>
@@ -290,8 +318,31 @@ const SummaryRow = ({ label, value }) => (
 )
 
 const SubmitBtn = ({ loading, success, total, currency, onClick }) => (
-    <button type={onClick ? 'button' : 'submit'} onClick={onClick} disabled={loading || success} className={`w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] text-white transition-all relative overflow-hidden ${success ? 'bg-primary' : 'bg-primary hover:bg-primary-dull shadow-xl'}`}>
-        {loading ? 'Verifying...' : success ? 'Success' : total ? `Authorize ${total.toLocaleString()} ${currency}` : 'Authorize'}
+    <button 
+        type={onClick ? 'button' : 'submit'} 
+        onClick={onClick} 
+        disabled={loading || success} 
+        className={`w-full py-4 rounded-[1.5rem] font-black text-[9px] uppercase tracking-[0.3em] text-white transition-all relative overflow-hidden group
+            ${success 
+                ? 'bg-gradient-to-r from-primary to-[#15803d]' 
+                : 'bg-gradient-to-r from-primary via-[#16A34A] to-primary bg-[length:200%_auto] hover:bg-right shadow-xl shadow-primary/10 hover:shadow-primary/30 active:scale-[0.98]'
+            }
+            ${loading || success ? 'cursor-default' : 'cursor-pointer'}
+        `}
+    >
+        {/* Subtle shine effect on hover */}
+        <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-[30deg] -translate-x-[200%] group-hover:translate-x-[300%] transition-transform duration-1000 ease-in-out" />
+        
+        <div className='flex items-center justify-center gap-3 relative z-10'>
+            {!loading && !success && (
+                <svg className="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                    <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+            )}
+            <span>
+                {loading ? 'Processing Transaction...' : success ? 'Booking Confirmed' : total ? `Pay Now: ${total.toLocaleString()} ${currency}` : 'Confirm Payment'}
+            </span>
+        </div>
     </button>
 )
 

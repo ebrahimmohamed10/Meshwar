@@ -8,6 +8,7 @@ const bookingSchema = new mongoose.Schema({
     pickupDate: {type: Date, required: true},
     returnDate: {type: Date, required: true},
     status: {type: String, enum: ["pending", "confirmed", "cancelled", "rejected"], default: "pending"},
+    cancellationReason: {type: String},
     price: {type: Number, required: true},
     paymentMethod: {type: String, default: "offline"}
 },{timestamps: true})

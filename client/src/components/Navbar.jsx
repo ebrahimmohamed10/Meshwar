@@ -32,6 +32,15 @@ const Navbar = () => {
         } catch (error) { toast.error(error.message) }
     }
 
+    const handleListCars = () => {
+        if (!user) {
+            toast.error('Please login or create an account to list your car');
+            setShowLogin(true);
+            return;
+        }
+        isPremium ? navigate('/owner') : navigate('/checkout/premium');
+    };
+
     const isHome = location.pathname === '/'
 
     return (
@@ -92,7 +101,7 @@ const Navbar = () => {
                 </div>
 
                 <button
-                    onClick={() => isPremium ? navigate('/owner') : navigate('/checkout/premium')}
+                    onClick={handleListCars}
                     className="text-sm font-medium text-gray-600 hover:text-primary transition-colors cursor-pointer"
                 >
                     {isPremium ? 'Owner Dashboard' : 'List cars'}
@@ -138,7 +147,7 @@ const Navbar = () => {
                                 placeholder="Search cars…" />
                         </div>
                         <div className="flex items-center gap-3 pt-2">
-                            <button onClick={() => { isPremium ? navigate('/owner') : navigate('/checkout/premium'); setOpen(false) }}
+                            <button onClick={() => { handleListCars(); setOpen(false) }}
                                 className="flex-1 text-center py-2.5 rounded-full border border-borderColor text-sm font-medium text-gray-600 hover:border-primary hover:text-primary transition-all cursor-pointer">
                                 {isPremium ? 'Owner Dashboard' : 'List cars'}
                             </button>

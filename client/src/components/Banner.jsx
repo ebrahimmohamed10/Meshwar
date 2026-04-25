@@ -2,9 +2,21 @@ import React from 'react'
 import { assets } from '../assets/assets'
 import { motion } from 'motion/react'
 import { useNavigate } from 'react-router-dom'
+import { useAppContext } from '../context/AppContext'
+import toast from 'react-hot-toast'
 
 const Banner = () => {
     const navigate = useNavigate()
+    const { user, setShowLogin, isPremium } = useAppContext()
+
+    const handleListCars = () => {
+        if (!user) {
+            toast.error('Please login or create an account to list your car');
+            setShowLogin(true);
+            return;
+        }
+        isPremium ? navigate('/owner') : navigate('/checkout/premium');
+    };
 
     return (
         <motion.section
@@ -51,7 +63,7 @@ const Banner = () => {
                     <motion.button
                         whileHover={{ scale: 1.04, backgroundColor: '#f9fafb' }}
                         whileTap={{ scale: 0.96 }}
-                        onClick={() => navigate('/owner')}
+                        onClick={handleListCars}
                         className='mt-7 px-7 py-3 bg-white text-primary font-bold rounded-xl text-sm cursor-pointer transition-all shadow-lg shadow-black/20'
                     >
                         List your car →

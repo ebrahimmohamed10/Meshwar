@@ -14,6 +14,29 @@ const checkAvailability = async (car, pickupDate, returnDate) => {
     return bookings.length === 0;
 }
 
+// Helper to auto-cancel pending bookings if pickup date has passed
+const autoCancelExpiredBookings = async () => {
+    try {
+        const today = new Date();
+        const expiredBookings = await Booking.find({
+            status: 'pending',
+            pickupDate: { $lt: today }
+        });
+
+        for (const booking of expiredBookings) {
+            // Refund to wallet if they paid via Wallet
+            if (booking.paymentMethod === 'Wallet') {
+                await User.findByIdAndUpdate(booking.user, { $inc: { wallet: booking.price } });
+            }
+            booking.status = 'cancelled';
+            booking.cancellationReason = "Auto-cancelled: No response from owner before the scheduled pickup date.";
+            await booking.save();
+        }
+    } catch (error) {
+        console.error("Auto-cancel error:", error.message);
+    }
+}
+
 // API to Check Availability of Cars for the given Date and location
 export const checkAvailabilityOfCar = async (req, res) => {
     try {
@@ -80,6 +103,7 @@ export const createBooking = async (req, res) => {
 // API to List User Bookings 
 export const getUserBookings = async (req, res) => {
     try {
+        await autoCancelExpiredBookings();
         const { _id } = req.user;
         const bookings = await Booking.find({ user: _id }).populate("car").sort({ createdAt: -1 })
         res.json({ success: true, bookings })
@@ -94,6 +118,7 @@ export const getUserBookings = async (req, res) => {
 
 export const getOwnerBookings = async (req, res) => {
     try {
+        await autoCancelExpiredBookings();
         if (req.user.role !== 'owner') {
             return res.json({ success: false, message: "Unauthorized" })
         }

@@ -1,9 +1,23 @@
 import React from 'react'
 import { assets } from '../assets/assets'
 import { motion } from 'motion/react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
 
 const Footer = () => {
+    const navigate = useNavigate()
+    const { user, setShowLogin, isPremium } = useAppContext()
+
+    const handleListCars = (e) => {
+        e.preventDefault();
+        if (!user) {
+            toast.error('Please login or create an account to list your car');
+            setShowLogin(true);
+            return;
+        }
+        isPremium ? navigate('/owner') : navigate('/checkout/premium');
+    };
 
     const quickLinks = [
         { label: 'Home', href: '/' },
@@ -82,6 +96,7 @@ const Footer = () => {
                                 <li key={i}>
                                     <Link
                                         to={l.href}
+                                        onClick={l.label === 'List Your Car' ? handleListCars : undefined}
                                         className='text-sm text-gray-500 hover:text-primary transition-colors duration-200 flex items-center gap-1.5 group'
                                     >
                                         <span className="w-1 h-1 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
