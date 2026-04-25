@@ -293,6 +293,8 @@ const ManageCars = () => {
                     <select value={editForm.category} onChange={e=> setEditForm({...editForm, category: e.target.value})} className='w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all text-gray-900'>
                       <option value="Sedan">Sedan</option>
                       <option value="SUV">SUV</option>
+                      <option value="Coupe">Coupe</option>
+                      <option value="Luxury">Luxury</option>
                       <option value="Van">Van</option>
                     </select>
                   </div>

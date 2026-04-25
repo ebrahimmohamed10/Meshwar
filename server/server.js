@@ -7,12 +7,17 @@ import userRouter from "./routes/userRoutes.js";
 import ownerRouter from "./routes/ownerRoutes.js";
 import bookingRouter from "./routes/bookingRoutes.js";
 import chatbotRouter from "./routes/chatbotRoutes.js";
+import { startAutoCancelJob } from "./utils/autoCancelJob.js";
 
 // Initialize Express App
+// Force restart to apply auto-cancel UTC fix
 const app = express()
 
 // Connect Database
 await connectDB()
+
+// Start Background Jobs
+startAutoCancelJob()
 
 // CORS Configuration
 app.use(cors({

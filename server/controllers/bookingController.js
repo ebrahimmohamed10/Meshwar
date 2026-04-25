@@ -17,19 +17,33 @@ const checkAvailability = async (car, pickupDate, returnDate) => {
 // Helper to auto-cancel pending bookings if pickup date has passed
 const autoCancelExpiredBookings = async () => {
     try {
-        const today = new Date();
+        const now = new Date();
+        const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000);
+        
+        // Use UTC for today's start to match DB storage
+        const startOfTodayUTC = new Date();
+        startOfTodayUTC.setUTCHours(0, 0, 0, 0);
+
+        // Find pending bookings where:
+        // 1. The pickup date is strictly in the past (before today UTC)
+        // 2. OR the pickup date is today UTC AND the booking was created more than 6 hours ago
         const expiredBookings = await Booking.find({
             status: 'pending',
-            pickupDate: { $lt: today }
+            $or: [
+                { pickupDate: { $lt: startOfTodayUTC } },
+                { 
+                    pickupDate: { $gte: startOfTodayUTC, $lt: new Date(startOfTodayUTC.getTime() + 24*60*60*1000) },
+                    createdAt: { $lte: sixHoursAgo }
+                }
+            ]
         });
 
         for (const booking of expiredBookings) {
-            // Refund to wallet if they paid via Wallet
-            if (booking.paymentMethod === 'Wallet') {
-                await User.findByIdAndUpdate(booking.user, { $inc: { wallet: booking.price } });
-            }
+            // Always refund to wallet on auto-cancellation
+            await User.findByIdAndUpdate(booking.user, { $inc: { wallet: booking.price } });
+            
             booking.status = 'cancelled';
-            booking.cancellationReason = "Auto-cancelled: No response from owner before the scheduled pickup date.";
+            booking.cancellationReason = "Automatic cancellation: Owner did not respond within 6 hours for a same-day booking (or pickup date passed).";
             await booking.save();
         }
     } catch (error) {

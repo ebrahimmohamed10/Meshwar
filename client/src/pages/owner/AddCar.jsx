@@ -144,6 +144,8 @@ const AddCar = () => {
                   <option value="" disabled>Select category</option>
                   <option value="Sedan">Sedan</option>
                   <option value="SUV">SUV</option>
+                  <option value="Coupe">Coupe</option>
+                  <option value="Luxury">Luxury</option>
                   <option value="Van">Van</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
