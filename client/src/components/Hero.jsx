@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { assets, cityList } from '../assets/assets'
 import { useAppContext } from '../context/AppContext'
-import {motion} from 'motion/react'
+import { motion } from 'motion/react'
 
 const Hero = () => {
 
     const [pickupLocation, setPickupLocation] = useState('')
-    const {pickupDate, setPickupDate, returnDate, setReturnDate, navigate} = useAppContext()
+    const { pickupDate, setPickupDate, returnDate, setReturnDate, navigate } = useAppContext()
 
     const handleSearch = (e) => {
         e.preventDefault()
@@ -47,7 +47,7 @@ const Hero = () => {
                     transition={{ duration: 0.7, delay: 0.15 }}
                     className='text-5xl md:text-7xl font-bold leading-tight tracking-tight text-gray-900'
                 >
-                    Drive Your <br/>
+                    Drive Your <br />
                     <span className="gradient-text">Dream Car</span> Today
                 </motion.h1>
 
@@ -93,7 +93,14 @@ const Hero = () => {
                                 onChange={e => setPickupDate(e.target.value)}
                                 type="date"
                                 id="pickup-date"
-                                min={new Date().toISOString().split('T')[0]}
+                                min={(() => {
+                                    const tomorrow = new Date();
+                                    tomorrow.setDate(tomorrow.getDate() + 1);
+                                    const yyyy = tomorrow.getFullYear();
+                                    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+                                    const dd = String(tomorrow.getDate()).padStart(2, '0');
+                                    return `${yyyy}-${mm}-${dd}`;
+                                })()}
                                 className='w-full bg-transparent outline-none text-gray-700 text-sm font-medium cursor-pointer'
                                 required
                             />
@@ -109,6 +116,19 @@ const Hero = () => {
                                 onChange={e => setReturnDate(e.target.value)}
                                 type="date"
                                 id="return-date"
+                                min={(() => {
+                                    if (pickupDate) {
+                                        const nextDay = new Date(pickupDate);
+                                        nextDay.setDate(nextDay.getDate() + 1);
+                                        return nextDay.toISOString().split('T')[0];
+                                    }
+                                    const tomorrow = new Date();
+                                    tomorrow.setDate(tomorrow.getDate() + 2);
+                                    const yyyy = tomorrow.getFullYear();
+                                    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+                                    const dd = String(tomorrow.getDate()).padStart(2, '0');
+                                    return `${yyyy}-${mm}-${dd}`;
+                                })()}
                                 className='w-full bg-transparent outline-none text-gray-700 text-sm font-medium cursor-pointer'
                                 required
                             />
@@ -121,7 +141,7 @@ const Hero = () => {
                             type="submit"
                             className='flex items-center justify-center gap-2 px-7 py-3.5 btn-primary font-semibold rounded-xl cursor-pointer shrink-0'
                         >
-                            <img src={assets.search_icon} alt="search" className='brightness-300 w-4 h-4'/>
+                            <img src={assets.search_icon} alt="search" className='brightness-300 w-4 h-4' />
                             Search
                         </motion.button>
                     </div>

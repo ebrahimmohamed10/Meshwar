@@ -139,13 +139,32 @@ const CarDetails = () => {
           <div className='flex flex-col gap-2'>
             <label htmlFor="pickup-date">Pickup Date</label>
             <input value={pickupDate} onChange={(e) => setPickupDate(e.target.value)}
-              type="date" className='border border-borderColor px-3 py-2 rounded-lg' required id='pickup-date' min={new Date().toISOString().split('T')[0]} />
+              type="date" className='border border-borderColor px-3 py-2 rounded-lg' required id='pickup-date' min={(() => {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const yyyy = tomorrow.getFullYear();
+                const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+                const dd = String(tomorrow.getDate()).padStart(2, '0');
+                return `${yyyy}-${mm}-${dd}`;
+              })()} />
           </div>
 
           <div className='flex flex-col gap-2'>
             <label htmlFor="return-date">Return Date</label>
             <input value={returnDate} onChange={(e) => setReturnDate(e.target.value)}
-              type="date" className='border border-borderColor px-3 py-2 rounded-lg' required id='return-date' />
+              type="date" className='border border-borderColor px-3 py-2 rounded-lg' required id='return-date' min={(() => {
+                if (pickupDate) {
+                  const nextDay = new Date(pickupDate);
+                  nextDay.setDate(nextDay.getDate() + 1);
+                  return nextDay.toISOString().split('T')[0];
+                }
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 2);
+                const yyyy = tomorrow.getFullYear();
+                const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+                const dd = String(tomorrow.getDate()).padStart(2, '0');
+                return `${yyyy}-${mm}-${dd}`;
+              })()} />
           </div>
 
           <button

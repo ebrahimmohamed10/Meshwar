@@ -5,13 +5,9 @@ import User from "../models/User.js";
 
 // Function to Check Availability of Car for a given Date
 const checkAvailability = async (car, pickupDate, returnDate) => {
-    const bookings = await Booking.find({
-        car,
-        status: { $nin: ['cancelled', 'rejected'] },
-        pickupDate: { $lte: returnDate },
-        returnDate: { $gte: pickupDate },
-    })
-    return bookings.length === 0;
+    // Overlapping requests are now allowed to give owners full control.
+    // Availability is now handled at the approval stage.
+    return true;
 }
 
 // Helper to auto-cancel pending bookings if pickup date has passed
@@ -19,7 +15,7 @@ const autoCancelExpiredBookings = async () => {
     try {
         const now = new Date();
         const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000);
-        
+
         // Use UTC for today's start to match DB storage
         const startOfTodayUTC = new Date();
         startOfTodayUTC.setUTCHours(0, 0, 0, 0);
@@ -31,17 +27,19 @@ const autoCancelExpiredBookings = async () => {
             status: 'pending',
             $or: [
                 { pickupDate: { $lt: startOfTodayUTC } },
-                { 
-                    pickupDate: { $gte: startOfTodayUTC, $lt: new Date(startOfTodayUTC.getTime() + 24*60*60*1000) },
+                {
+                    pickupDate: { $gte: startOfTodayUTC, $lt: new Date(startOfTodayUTC.getTime() + 24 * 60 * 60 * 1000) },
                     createdAt: { $lte: sixHoursAgo }
                 }
             ]
         });
 
         for (const booking of expiredBookings) {
-            // Always refund to wallet on auto-cancellation
-            await User.findByIdAndUpdate(booking.user, { $inc: { wallet: booking.price } });
-            
+            // Refund to wallet (applies to all five payment methods)
+            if (booking.paymentMethod !== 'offline') {
+                await User.findByIdAndUpdate(booking.user, { $inc: { wallet: booking.price } });
+            }
+
             booking.status = 'cancelled';
             booking.cancellationReason = "Automatic cancellation: Owner did not respond within 6 hours for a same-day booking (or pickup date passed).";
             await booking.save();
@@ -81,6 +79,21 @@ export const createBooking = async (req, res) => {
     try {
         const { _id } = req.user;
         const { car, pickupDate, returnDate, paymentMethod } = req.body;
+        
+        // Server-side validation for dates
+        const picked = new Date(pickupDate);
+        const returned = new Date(returnDate);
+        const tomorrow = new Date();
+        tomorrow.setHours(0, 0, 0, 0);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        if (picked < tomorrow) {
+            return res.json({ success: false, message: "Bookings must start at least from tomorrow." })
+        }
+
+        if (returned <= picked) {
+            return res.json({ success: false, message: "Return date must be at least one day after pickup date." })
+        }
 
         const isAvailable = await checkAvailability(car, pickupDate, returnDate)
         if (!isAvailable) {
@@ -90,8 +103,6 @@ export const createBooking = async (req, res) => {
         const carData = await Car.findById(car)
 
         // Calculate price based on pickupDate and returnDate
-        const picked = new Date(pickupDate);
-        const returned = new Date(returnDate);
         const noOfDays = Math.ceil((returned - picked) / (1000 * 60 * 60 * 24)) || 1
         const price = carData.pricePerDay * noOfDays;
 
@@ -157,7 +168,30 @@ export const changeBookingStatus = async (req, res) => {
         }
 
         if (status === 'rejected' && booking.status === 'pending') {
-            await User.findByIdAndUpdate(booking.user, { $inc: { wallet: booking.price } })
+            // Refund to wallet (applies to all five payment methods)
+            if (booking.paymentMethod !== 'offline') {
+                await User.findByIdAndUpdate(booking.user, { $inc: { wallet: booking.price } })
+            }
+        }
+
+        if (status === 'confirmed') {
+            // Automatically cancel and refund ALL other bookings (pending OR confirmed) that overlap with this new confirmation
+            const conflictingBookings = await Booking.find({
+                _id: { $ne: bookingId },
+                car: booking.car,
+                status: { $in: ['pending', 'confirmed'] },
+                pickupDate: { $lte: booking.returnDate },
+                returnDate: { $gte: booking.pickupDate }
+            });
+
+            for (const conflict of conflictingBookings) {
+                if (conflict.paymentMethod !== 'offline') {
+                    await User.findByIdAndUpdate(conflict.user, { $inc: { wallet: conflict.price } });
+                }
+                conflict.status = 'cancelled';
+                conflict.cancellationReason = "Cancelled due to a scheduling conflict with another booking approved by the owner.";
+                await conflict.save();
+            }
         }
 
         booking.status = status;
@@ -192,8 +226,10 @@ export const cancelBooking = async (req, res) => {
             return res.json({ success: false, message: "Only pending bookings can be cancelled" });
         }
 
-        // Refund to wallet
-        await User.findByIdAndUpdate(booking.user, { $inc: { wallet: booking.price } });
+        // Refund to wallet (applies to all five payment methods)
+        if (booking.paymentMethod !== 'offline') {
+            await User.findByIdAndUpdate(booking.user, { $inc: { wallet: booking.price } });
+        }
 
         booking.status = 'cancelled';
         await booking.save();
